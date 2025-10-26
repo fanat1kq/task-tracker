@@ -4,6 +4,16 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### my config ###
+mvnw
+mvnw.cmd
+.mvn/
+.idea
+.env.dev
+.env.docker
+.env
+build-and-push.sh
+
 ### STS ###
 .apt_generated
 .classpath
