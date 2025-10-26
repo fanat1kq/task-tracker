@@ -1,7 +1,6 @@
-[submodule "notification-service"]
-	path = notification-service
+[submodule "tracker-notification-service"]
+	path = tracker-notification-service
 	url = https://github.com/fanat1kq/tracker-notification-service
-
-[submodule "front"]
-	path = front-service
+[submodule "tracker-front"]
+	path = tracker-front
 	url = https://github.com/fanat1kq/tracker-front
