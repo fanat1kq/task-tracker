@@ -4,6 +4,13 @@
 [submodule "tracker-front"]
 	path = tracker-front
 	url = https://github.com/fanat1kq/tracker-front
-[submodule "tracker-backend-service"]
-	path = tracker-backend-service
-	url = https://github.com/fanat1kq/tracker-backend-service
+
+[submodule "tracker-gateway"]
+	path = tracker-gateway
+	url = https://github.com/fanat1kq/tracker-gateway
+[submodule "tracket-auth-service"]
+	path = tracket-auth-service
+	url = https://github.com/fanat1kq/tracket-auth-service
+[submodule "task-service"]
+	path = task-service
+	url = https://github.com/fanat1kq/task-service
