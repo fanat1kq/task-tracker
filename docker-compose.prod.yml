@@ -1,51 +1,71 @@
 services:
-
-  redis:
-    image: redis:latest
-    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
-    env_file: .env
-    volumes:
-      - redis-data:/data
-    restart: unless-stopped
-    networks:
-      - file-storage-network
-
-  minio:
-    image: minio/minio
-    env_file: .env
-    command: server /data --console-address ":9001"
-    networks:
-      - file-storage-network
-
-  frontend:
+  task-service:
+    container_name: task-service
     build:
-      context: ./frontend/cloud-storage-frontend-master/
+      context: ./task-service
       dockerfile: Dockerfile
-    ports:
-      - "8082:80"
+    #    ports:
+    #      - "8081:8081"
+    env_file: ./task-service/.env
     networks:
-      - file-storage-network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: target/cloud-files-0.0.1-SNAPSHOT.jar
-    ports:
-      - "8080:8080"
+      - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-    env_file: .env
-    depends_on:
-      - postgres
-      - redis
-      - minio
-    networks:
-      - file-storage-network
 
+  front:
+    container_name: front
+    build:
+      context: ./tracker-front
+      dockerfile: Dockerfile
+    #    env_file: ./tracker-front/.env.docker
+    ports:
+      - "3000:3000"
+    networks:
+      - tracker-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  gateway:
+    container_name: gateway
+    build:
+      context: ./tracker-gateway
+      dockerfile: Dockerfile
+    env_file: ./tracker-gateway/.env
+    #    ports:
+    #      - "8080:8080"
+    networks:
+      - tracker-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./tracket-auth-service
+      dockerfile: Dockerfile
+    env_file: ./tracket-auth-service/.env
+    networks:
+      - tracker-network
+    #    ports:
+    #      - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./tracker-notification-service
+      dockerfile: Dockerfile
+    env_file: ./tracker-notification-service/.env
+    networks:
+      - tracker-network
+  #    ports:
+  #      - "8085:8085"
+
+  # Инфраструктура
   postgres:
     image: postgres:17
+    container_name: postgres
     env_file: .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -54,18 +74,47 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - file-storage-network
+      - tracker-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+    ports:
+      - "5432:5432"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - tracker-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - tracker-network
 
 volumes:
-  minio-data:
-  redis-data:
   postgres-data:
 
 networks:
-  file-storage-network:
+  tracker-network:
     driver: bridge
