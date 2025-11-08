@@ -1,61 +1,71 @@
-version: '3.8'
 services:
-  service1:
+  task-service:
+    container_name: task-service
     build:
-      context: ./task-service/
+      context: ./task-service
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8081:8081"
+    env_file: ./task-service/.env.docker
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  service2:
+  front:
+    container_name: front
     build:
       context: ./tracker-front
       dockerfile: Dockerfile
+#    env_file: ./tracker-front/.env.docker
     ports:
-      - "8081:8081"
+      - "3000:3000"
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  service3:
+  gateway:
+    container_name: gateway
     build:
       context: ./tracker-gateway
       dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
+    env_file: ./tracker-gateway/.env.docker
+#    ports:
+#      - "8080:8080"
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  service4:
+  auth-service:
+    container_name: auth-service
     build:
       context: ./tracket-auth-service
       dockerfile: Dockerfile
+    env_file: ./tracket-auth-service/.env.docker
     networks:
       - tracker-network
-    ports:
-      - "8083:8083"
+#    ports:
+#      - "9000:9000"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  service5:
+  notification-service:
+    container_name: notification-service
     build:
       context: ./tracker-notification-service
       dockerfile: Dockerfile
+    env_file: ./tracker-notification-service/.env.docker
     networks:
       - tracker-network
-    ports:
-      - "8084:8084"
+#    ports:
+#      - "8085:8085"
 
   # Инфраструктура
   postgres:
     image: postgres:17
+    container_name: postgres
     env_file: .env.docker
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -66,10 +76,10 @@ services:
     networks:
       - tracker-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+    ports:
+      - "5432:5432"
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -81,22 +91,19 @@ services:
     networks:
       - tracker-network
 
-  kafka1:
+  kafka:
     image: confluentinc/cp-kafka:7.3.0
-    container_name: kafka1
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"    # Для подключения с хоста
-      - "29092:29092"  # Для подключения из Docker-сети
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:29092
-      #      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      #      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-      #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_MIN_INSYNC_REPLICAS: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
