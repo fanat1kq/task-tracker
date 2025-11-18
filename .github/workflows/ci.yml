@@ -29,6 +29,12 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Force update submodules to latest commits
+        run: |
+          git submodule deinit --all -f
+          git submodule update --init --remote --recursive --force
+          git submodule foreach 'git fetch --all --force && git reset --hard origin/main'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
