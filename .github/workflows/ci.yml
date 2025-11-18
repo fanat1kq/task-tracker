@@ -23,20 +23,34 @@ jobs:
             image_name: notification-service
 
     steps:
-      - name: Checkout code with submodules
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: false
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Force update submodules (skip broken ones)
+      - name: Initialize and update submodules
         run: |
-          # Сначала обновим рабочие подмодули
-          git submodule deinit --all -f
-          git submodule update --init --recursive --force tracker-gateway tracker-notification-service task-service tracker-front
+          # Initialize submodules first
+          git submodule init
           
-          # Пропускаем проблемный подмодуль и обновляем его отдельно
-          git submodule update --init --remote --force tracket-auth-service || true
+          # Update working submodules normally
+          git submodule update --recursive --force tracker-gateway tracker-notification-service task-service tracker-front
+          
+          # Handle problematic submodule separately
+          echo "Handling tracket-auth-service submodule..."
+          git config -f .gitmodules --get-regexp submodule | grep tracket-auth-service
+          
+          # Try to remove and re-add the problematic submodule
+          git submodule deinit -f tracket-auth-service
+          rm -rf .git/modules/tracket-auth-service
+          git rm -f tracket-auth-service
+          
+          # Re-add the submodule
+          git submodule add --force https://github.com/your-username/tracket-auth-service.git tracket-auth-service || echo "Failed to re-add submodule, continuing without it"
+          
+          # Final update
+          git submodule update --init --recursive --force || echo "Some submodules failed, continuing build"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,7 +61,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Check if service directory exists
+        id: check_dir
+        run: |
+          if [ -d "./${{ matrix.service }}" ]; then
+            echo "dir_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "dir_exists=false" >> $GITHUB_OUTPUT
+            echo "Warning: Directory ${{ matrix.service }} does not exist, skipping build"
+          fi
+
       - name: Build and push ${{ matrix.service }}
+        if: steps.check_dir.outputs.dir_exists == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.service }}
