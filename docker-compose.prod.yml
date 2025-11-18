@@ -4,8 +4,6 @@ services:
     build:
       context: ./task-service
       dockerfile: Dockerfile
-    #    ports:
-    #      - "8081:8081"
     env_file: ./task-service/.env
     networks:
       - tracker-network
@@ -31,8 +29,6 @@ services:
       context: ./tracker-gateway
       dockerfile: Dockerfile
     env_file: ./tracker-gateway/.env
-    #    ports:
-    #      - "8080:8080"
     networks:
       - tracker-network
     environment:
@@ -46,8 +42,6 @@ services:
     env_file: ./tracket-auth-service/.env
     networks:
       - tracker-network
-    #    ports:
-    #      - "9000:9000"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
 
@@ -59,8 +53,8 @@ services:
     env_file: ./tracker-notification-service/.env
     networks:
       - tracker-network
-  #    ports:
-  #      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
 
   # Инфраструктура
   postgres:

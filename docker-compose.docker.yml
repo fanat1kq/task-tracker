@@ -59,6 +59,8 @@ services:
     env_file: ./tracker-notification-service/.env.docker
     networks:
       - tracker-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 #    ports:
 #      - "8085:8085"
 
