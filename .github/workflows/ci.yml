@@ -80,3 +80,31 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_name }}:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_name }}:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_name }}:buildcache,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'  # Только для master ветки
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/tracker-app
+
+            # Обновляем образы
+            docker compose pull
+
+            # Перезапускаем контейнеры
+            docker compose -f docker-compose.prod.yml up -d
+
+            # Очищаем старые образы
+            docker image prune -f
+
+            # Проверяем статус
+            docker compose ps
+            echo "Deployment completed successfully!"
