@@ -10,3 +10,6 @@
 [submodule "tracker-front"]
 	path = tracker-front
 	url = https://github.com/fanat1kq/tracker-front
+[submodule "tracker-notification-service"]
+	path = tracker-notification-service
+	url = https://github.com/fanat1kq/tracker-notification-service
