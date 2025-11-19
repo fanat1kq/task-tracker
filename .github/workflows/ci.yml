@@ -79,6 +79,7 @@ jobs:
           script: |
             cd ~/app/task-tracker
             docker-compose -f docker-compose.prod.yml down
+            docker images "fanat1kq11/*" --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}" | grep master | awk '{print $2}' | xargs -r docker rmi -f || true
             docker stop task-service auth-service front notification-service gateway postgres zookeeper kafka || true
             docker rm task-service auth-service front notification-service gateway postgres zookeeper kafka || true
             docker-compose -f docker-compose.prod.yml pull --ignore-pull-failures
