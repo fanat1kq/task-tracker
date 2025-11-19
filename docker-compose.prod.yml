@@ -1,6 +1,7 @@
 services:
   task-service:
-    container_name: fanat1kq11/task-service:latest
+    image: fanat1kq11/task-service:master
+    container_name: task-service
 #    build:
 #      context: ./task-service
 #      dockerfile: Dockerfile
@@ -11,7 +12,8 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   front:
-    container_name: fanat1kq11/front:latest
+    image: fanat1kq11/front:master
+    container_name: front
 #    build:
 #      context: ./tracker-front
 #      dockerfile: Dockerfile
@@ -24,7 +26,8 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   gateway:
-    container_name: fanat1kq11/gateway:latest
+    image: fanat1kq11/gateway:master
+    container_name: gateway
 #    build:
 #      context: ./tracker-gateway
 #      dockerfile: Dockerfile
@@ -35,10 +38,11 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   auth-service:
-    container_name: fanat1kq11/auth-service:latest
-    build:
-      context: ./tracket-auth-service
-      dockerfile: Dockerfile
+    image: fanat1kq11/auth-service:master
+    container_name: auth-service
+#    build:
+#      context: ./tracket-auth-service
+#      dockerfile: Dockerfile
     env_file: ./tracket-auth-service/.env
     networks:
       - tracker-network
@@ -46,10 +50,11 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   notification-service:
-    container_name: fanat1kq11/notificaiton-service:latest
-    build:
-      context: ./tracker-notification-service
-      dockerfile: Dockerfile
+    image: fanat1kq11/notification-service:master
+    container_name: notification-service
+#    build:
+#      context: ./tracker-notification-service
+#      dockerfile: Dockerfile
     env_file: ./tracker-notification-service/.env
     networks:
       - tracker-network
