@@ -7,9 +7,6 @@
 [submodule "task-service"]
 	path = task-service
 	url = https://github.com/fanat1kq/task-service
-[submodule "tracker-notification-service"]
-	path = tracker-notification-service
-	url = https://github.com/fanat1kq/tracker-notification-service
 [submodule "tracker-front"]
 	path = tracker-front
 	url = https://github.com/fanat1kq/tracker-front
