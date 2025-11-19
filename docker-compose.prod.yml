@@ -124,7 +124,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
-      - kafka-net
+      - tracker-network
     volumes:
       - debezium-data:/debezium/data
       - ./conf/:/on-startup/
