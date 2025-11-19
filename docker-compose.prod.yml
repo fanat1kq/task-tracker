@@ -110,10 +110,37 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     networks:
       - tracker-network
+  debezium:
+    image: debezium/connect:2.4.0.Final
+    container_name: debezium
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - kafka-net
+    volumes:
+      - debezium-data:/debezium/data
+      - ./conf/:/on-startup/
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /docker-entrypoint.sh start &
+        sleep 30
+        /on-startup/run.sh
+        wait
 
 volumes:
   postgres-data:
-
+  debezium-data:
+    driver: local
 networks:
   tracker-network:
     driver: bridge

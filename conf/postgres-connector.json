@@ -1,0 +1,27 @@
+{
+  "name": "outbox-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "tasks.max": "1",
+    "topic.prefix": "transformed-outbox",
+    "database.hostname": "host.docker.internal",
+    "database.port": "5432",
+    "database.user": "nikita",
+    "database.password": "postgres",
+    "database.dbname": "task_tracker_db",
+    "table.include.list": "authorization_service.outbox_events",
+    "transforms": "unwrap,valueToKey,extractKey,extractPayload",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.valueToKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.valueToKey.fields": "deduplication_key",
+    "transforms.extractKey.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.extractKey.field": "deduplication_key",
+    "transforms.extractPayload.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+    "transforms.extractPayload.field": "payload",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
+  }
+}
