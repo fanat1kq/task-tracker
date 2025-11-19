@@ -28,6 +28,8 @@ services:
   gateway:
     image: fanat1kq11/gateway:master
     container_name: gateway
+    ports:
+      - "8080:8080"
 #    build:
 #      context: ./tracker-gateway
 #      dockerfile: Dockerfile
