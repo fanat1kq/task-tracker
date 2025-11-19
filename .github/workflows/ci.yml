@@ -67,7 +67,7 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'  # Только для master ветки
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Deploy to server via SSH
