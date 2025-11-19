@@ -19,7 +19,7 @@ services:
 #      dockerfile: Dockerfile
     #    env_file: ./tracker-front/.env.docker
     ports:
-      - "3000:3000"
+      - "3001:3001"
     networks:
       - tracker-network
     environment:
