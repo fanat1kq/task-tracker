@@ -81,7 +81,7 @@ jobs:
             docker-compose -f docker-compose.prod.yml down
             docker stop task-service auth-service front notification-service gateway postgres zookeeper kafka || true
             docker rm task-service auth-service front notification-service gateway postgres zookeeper kafka || true
-            docker rmi fanat1kq11/front:master fanat1kq11/notification-service:master fanat1kq11/gateway:master || true
+            docker rmi $(docker images "fanat1kq11/*" -q) || true
             docker-compose -f docker-compose.prod.yml pull --ignore-pull-failures
             docker-compose -f docker-compose.prod.yml up -d
             docker image prune -f
