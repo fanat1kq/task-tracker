@@ -77,7 +77,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /opt/tracker-app
+            cd ~/app/task-tracker
 
             # Обновляем образы
             docker compose pull
