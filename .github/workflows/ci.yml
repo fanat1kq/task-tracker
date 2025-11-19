@@ -31,25 +31,8 @@ jobs:
 
       - name: Initialize and update submodules
         run: |
-          # Initialize submodules first
           git submodule init
-          
-          # Update working submodules normally
-          git submodule update --recursive --force tracker-gateway tracker-notification-service task-service tracker-front
-          
-          # Handle problematic submodule separately
-          echo "Handling tracket-auth-service submodule..."
-          git config -f .gitmodules --get-regexp submodule | grep tracket-auth-service
-          
-          # Try to remove and re-add the problematic submodule
-          git submodule deinit -f tracket-auth-service
-          rm -rf .git/modules/tracket-auth-service
-          git rm -f tracket-auth-service
-          
-          # Re-add the submodule
-          git submodule add --force https://github.com/your-username/tracket-auth-service.git tracket-auth-service || echo "Failed to re-add submodule, continuing without it"
-          
-          # Final update
+          git submodule update --recursive --force tracker-gateway tracker-notification-service task-service tracker-front tracket-auth-service
           git submodule update --init --recursive --force || echo "Some submodules failed, continuing build"
 
       - name: Set up Docker Buildx
