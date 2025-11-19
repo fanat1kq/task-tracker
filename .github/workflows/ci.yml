@@ -78,6 +78,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/app/task-tracker
+            docker stop task-service auth-service front notification-service gateway postgres zookeeper kafka || true
+            docker rm task-service auth-service front notification-service gateway postgres zookeeper kafka || true
             docker-compose -f docker-compose.prod.yml pull
             docker-compose -f docker-compose.prod.yml up -d
             docker image prune -f
