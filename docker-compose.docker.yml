@@ -1,11 +1,8 @@
 services:
   task-service:
+    platform: linux/amd64
+    image: fanat1kq11/task-service:master
     container_name: task-service
-    build:
-      context: ./task-service
-      dockerfile: Dockerfile
-#    ports:
-#      - "8081:8081"
     env_file: ./task-service/.env.docker
     networks:
       - tracker-network
@@ -13,56 +10,44 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
 
   front:
+    platform: linux/amd64
+    image: fanat1kq11/front:master
     container_name: front
-    build:
-      context: ./tracker-front
-      dockerfile: Dockerfile
-#    env_file: ./tracker-front/.env.docker
+    env_file: ./tracker-front/.env
     ports:
-      - "3000:3000"
+      - "3001:3001"
     networks:
       - tracker-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
 
   gateway:
+    platform: linux/amd64
+    image: fanat1kq11/gateway:master
     container_name: gateway
-    build:
-      context: ./tracker-gateway
-      dockerfile: Dockerfile
     env_file: ./tracker-gateway/.env.docker
-#    ports:
-#      - "8080:8080"
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
   auth-service:
+    platform: linux/amd64
+    image: fanat1kq11/auth-service:master
     container_name: auth-service
-    build:
-      context: ./tracket-auth-service
-      dockerfile: Dockerfile
     env_file: ./tracket-auth-service/.env.docker
     networks:
       - tracker-network
-#    ports:
-#      - "9000:9000"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
   notification-service:
+    platform: linux/amd64
+    image: fanat1kq11/notification-service:master
     container_name: notification-service
-    build:
-      context: ./tracker-notification-service
-      dockerfile: Dockerfile
     env_file: ./tracker-notification-service/.env.docker
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-#    ports:
-#      - "8085:8085"
 
   # Инфраструктура
   postgres:
@@ -113,10 +98,37 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     networks:
       - tracker-network
+  debezium:
+    image: debezium/connect:2.4.0.Final
+    container_name: debezium
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - tracker-network
+    volumes:
+      - debezium-data:/debezium/data
+      - ./conf/:/on-startup/
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /docker-entrypoint.sh start &
+        sleep 30
+        /on-startup/run.sh
+        wait
 
 volumes:
   postgres-data:
-
+  debezium-data:
+    driver: local
 networks:
   tracker-network:
     driver: bridge

@@ -22,8 +22,6 @@ services:
       - "3001:3001"
     networks:
       - tracker-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
 
   gateway:
     image: fanat1kq11/gateway:master
