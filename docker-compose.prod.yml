@@ -1,10 +1,11 @@
 services:
   task-service:
-    image: fanat1kq11/task-service:master
+    build:
+      context: ./task-service
+      dockerfile: Dockerfile
+    #    platform: linux/amd64
+    #    image: fanat1kq11/task-service:master
     container_name: task-service
-#    build:
-#      context: ./task-service
-#      dockerfile: Dockerfile
     env_file: ./task-service/.env
     networks:
       - tracker-network
@@ -12,37 +13,40 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   front:
-    image: fanat1kq11/front:master
+    build:
+      context: ./tracker-front
+      dockerfile: Dockerfile
+    #    platform: linux/amd64
+    #    image: fanat1kq11/front:master
     container_name: front
-#    build:
-#      context: ./tracker-front
-#      dockerfile: Dockerfile
-    #    env_file: ./tracker-front/.env.docker
+    env_file: ./tracker-front/.env
     ports:
       - "3001:3001"
     networks:
       - tracker-network
 
   gateway:
-    image: fanat1kq11/gateway:master
+    build:
+      context: ./tracker-gateway
+      dockerfile: Dockerfile
+    #    platform: linux/amd64
+    #    image: fanat1kq11/gateway:master
     container_name: gateway
+    env_file: ./tracker-gateway/.env
     ports:
       - "8080:8080"
-#    build:
-#      context: ./tracker-gateway
-#      dockerfile: Dockerfile
-    env_file: ./tracker-gateway/.env
     networks:
       - tracker-network
     environment:
       - SPRING_PROFILES_ACTIVE=prod
 
   auth-service:
-    image: fanat1kq11/auth-service:master
+    build:
+      context: ./tracket-auth-service
+      dockerfile: Dockerfile
+    #    platform: linux/amd64
+    #    image: fanat1kq11/auth-service:master
     container_name: auth-service
-#    build:
-#      context: ./tracket-auth-service
-#      dockerfile: Dockerfile
     env_file: ./tracket-auth-service/.env
     networks:
       - tracker-network
@@ -50,11 +54,12 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
 
   notification-service:
-    image: fanat1kq11/notification-service:master
+    build:
+      context: ./tracker-notification-service
+      dockerfile: Dockerfile
+    #    platform: linux/amd64
+    #    image: fanat1kq11/notification-service:master
     container_name: notification-service
-#    build:
-#      context: ./tracker-notification-service
-#      dockerfile: Dockerfile
     env_file: ./tracker-notification-service/.env
     networks:
       - tracker-network
