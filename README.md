@@ -2,34 +2,26 @@
 
 ## Обзор
 
-Task Tracker - это простое, но мощное приложение для управления задачами, которое использует микросервисную архитектуру для предоставления масштабируемого и эффективного решения. Приложение позволяет пользователям организовывать свои задачи в манере, подобной Trello, с использованием React-клиента для бесшовного пользовательского опыта. Бэкенд реализован с использованием Spring Boot, с дополнительными функциями, такими как планировщик на Kotlin для автоматизации задач и отправитель электронной почты для уведомлений.
+Task Tracker - это простое, но мощное приложение для управления задачами, которое использует микросервисную архитектуру для предоставления масштабируемого и эффективного решения. Приложение позволяет пользователям организовывать свои задачи в манере, подобной Trello, с использованием React-клиента для бесшовного пользовательского опыта. Бэкенд реализован с использованием Spring Boot, с дополнительными функциями, такими как планировщик для автоматизации задач и отправитель электронной почты для уведомлений.
 
 ## Technologies Used
 
-- **Client (React):** The front end is built using React, providing a modern and responsive user interface for an
-  optimal user experience.
+- **Client (React):** Фронтенд построен с использованием React, предоставляя современный и отзывчивый пользовательский интерфейс для оптимального пользовательского опыта.
 
-- **Backend API (Spring Boot):** The backend is developed using Spring Boot, offering a robust and scalable foundation
-  for managing tasks and user data.
+- **Task service (Spring Boot):** Бэкенд разработан с использованием Spring Boot, предлагая надежную и масштабируемую основу для управления задачами.
 
-- **Scheduler (Kotlin Spring Boot):** Kotlin is used for creating scheduled tasks to automate certain processes within
-  the application, ensuring efficiency and timely updates.
+- **Notification service (Spring Boot):** спользуется для отправки уведомлений пользователям, информируя их о важных обновлениях и сроках.
 
-- **Email Sender (Kotlin Spring Boot):** Kotlin Spring Boot is employed for sending email notifications to users,
-  keeping them informed about important updates and deadlines.
+- **Authentification service (Spring Boot):** Разработан с использованием Spring Boot, предлагая надежную и масштабируемую основу для управления пользователями, а также работы с
+  oauth 2.0.
 
-- **Database (Postgres):** Postgres is used as the relational database to store task-related information securely.
+- **Database (Postgres):** Postgres используется как реляционная база данных для безопасного хранения информации, связанной с задачами
 
-- **Caching (Redis):** Redis is utilized for caching to enhance the performance of the application by storing frequently
-  accessed data in-memory.
+- **Message Broker (Kafka):** Kafka используется как брокер сообщений для обеспечения коммуникации и обмена данными между микросервисами, обеспечивая слабосвязанную архитектуру.
 
-- **Message Broker (RabbitMQ):** RabbitMQ is employed as a message broker to enable communication and data exchange
-  between microservices, ensuring a loosely coupled architecture.
+- **Authentication (JWT Tokens):** JSON Web Tokens (JWT) используются для безопасной аутентификации пользователей, предоставляя надежный механизм для проверки идентичности пользователей.
 
-- **Authentication (JWT Tokens):** JSON Web Tokens (JWT) are used for secure user authentication, providing a reliable
-  mechanism for verifying the identity of users.
-
-## Microservices
+## Микросервисы
 
 The application comprises the following microservices, each responsible for specific functionalities:
 
