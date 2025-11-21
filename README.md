@@ -29,23 +29,22 @@ Task Tracker - это простое, но мощное приложение д�
 
 Приложение состоит из следующих микросервисов, каждый из которых отвечает за определенные функциональности:
 
-1. [Task Tracker Web API](https://github.com/farneser/task-tracker-api): Implements the core business logic of the
-   application, managing tasks and user-related operations.
+1. [Task Tracker](https://github.com/fanat1kq/task-tracker): Реализует основную бизнес-логику приложения, управляя задачами и операциями, связанными с пользователями.
 
-2. [Task Tracker React Client](https://github.com/farneser/task-tracker-client): Provides a modern and responsive user
-   interface for users to interact with the task management system.
+2. [React Client](https://github.com/fanat1kq/tracker-front): Предоставляет современный и отзывчивый пользовательский интерфейс для взаимодействия пользователей с системой управления задачами.
 
-3. [Task Tracker Email Service](https://github.com/farneser/task-tracker-email-sender): Manages the sending of email
-   notifications, keeping users informed about important updates and deadlines.
+3. [ Notification Service](https://github.com/fanat1kq/tracker-notification-service): Управляет отправкой уведомлений, информируя пользователей о важных обновлениях и сроках.
 
-4. [Task Tracker Scheduler Service](https://github.com/farneser/task-tracker-scheduler): Implements scheduled tasks to
+4. [Auth Service](https://github.com/fanat1kq/tracket-auth-service): Предоставляет современный и отзывчивый пользовательский интерфейс для управления пользователями и работы с oauth 2.0
+
+5. [Gateway Service](https://github.com/fanat1kq/tracker-gateway): Implements scheduled tasks to
    automate processes within the application, ensuring efficiency and timely updates.
 
-The microservices are deployed using Docker containers, with the following architecture:
+6. [Task Service](https://github.com/fanat1kq/task-service): Предоставляет современный и отзывчивый пользовательский интерфейс для управления задачами.
 
-![services](assets/microservices.svg)
+Микросервисы развертываются с использованием Docker-контейнеров
 
-## Run default
+## Запуск по умолчанию
 
 Основной метод запуска этого приложения - использование docker-compose. Узнайте больше о конфигурации в Docker.md
 
