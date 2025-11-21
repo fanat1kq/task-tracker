@@ -37,8 +37,7 @@ Task Tracker - это простое, но мощное приложение д�
 
 4. [Auth Service](https://github.com/fanat1kq/tracket-auth-service): Предоставляет современный и отзывчивый пользовательский интерфейс для управления пользователями и работы с oauth 2.0
 
-5. [Gateway Service](https://github.com/fanat1kq/tracker-gateway): Implements scheduled tasks to
-   automate processes within the application, ensuring efficiency and timely updates.
+5. [Gateway Service](https://github.com/fanat1kq/tracker-gateway): Реализует единую точку входа для всех клиентских запросов, маршрутизацию, аутентификацию и кросc-доменные запросы (CORS).
 
 6. [Task Service](https://github.com/fanat1kq/task-service): Предоставляет современный и отзывчивый пользовательский интерфейс для управления задачами.
 
