@@ -1,10 +1,10 @@
-# Трекер задач
+# Трекер задач[Task Tracker]
 
 ## Обзор
 
 Task Tracker - это простое, но мощное приложение для управления задачами, которое использует микросервисную архитектуру для предоставления масштабируемого и эффективного решения. Приложение позволяет пользователям организовывать свои задачи в манере, подобной Trello, с использованием React-клиента для бесшовного пользовательского опыта. Бэкенд реализован с использованием Spring Boot, с дополнительными функциями, такими как планировщик для автоматизации задач и отправитель электронной почты для уведомлений.
 
-## Technologies Used
+## Технологии
 
 - **Client (React):** Фронтенд построен с использованием React, предоставляя современный и отзывчивый пользовательский интерфейс для оптимального пользовательского опыта.
 
@@ -23,7 +23,7 @@ Task Tracker - это простое, но мощное приложение д�
 
 ## Микросервисы
 
-The application comprises the following microservices, each responsible for specific functionalities:
+Приложение состоит из следующих микросервисов, каждый из которых отвечает за определенные функциональности:
 
 1. [Task Tracker Web API](https://github.com/farneser/task-tracker-api): Implements the core business logic of the
    application, managing tasks and user-related operations.
@@ -41,71 +41,56 @@ The microservices are deployed using Docker containers, with the following archi
 
 ![services](assets/microservices.svg)
 
-## Technologies Used
-
-* [Spring Boot](https://spring.io/projects/spring-boot): A framework for building Java-based enterprise applications.
-* [Kotlin](https://kotlinlang.org/): A modern programming language that works seamlessly with Java on the JVM.
-* [Spring Data JPA](https://spring.io/projects/spring-data-jpa): Simplifying data access with JPA.
-* [Postgres](https://www.postgresql.org/): A powerful, open-source relational database system.
-* [Spring Security](https://spring.io/projects/spring-security): A powerful and customizable authentication and access
-  control framework.
-* [ModelMapper](https://modelmapper.org/): An object mapping library that automatically maps one object to another.
-* [Flyway](https://flywaydb.org/): Database migration tool for Java-based systems.
-* [Swagger](https://swagger.io/): A tool for documenting APIs, providing a user interface to interact with your RESTful
-  services.
-* [React](https://reactjs.org/): A JavaScript library for building user interfaces.
-* [TypeScript](https://www.typescriptlang.org/): A superset of JavaScript that adds static typing and other features.
-
 ## Run default
 
-Main method of running this application is using docker-compose. Learn more about configuration in [Docker.md](Docker.md)
+Основной метод запуска этого приложения - использование docker-compose. Узнайте больше о конфигурации в Docker.md
 
-### Run built image
+### Запуск собранного образа
 
 Run the application with the default configuration (docker compose is required). This will start the following services:
 
-1. Clone the repository
+1. Клонируйте репозиторий
 
     ```bash
-    git clone https://github.com/farneser/task-tracker && cd task-tracker
+    git clone https://github.com/anat1kq/task-tracker.git && cd task-tracker
     ```
 
-2. Run the application
+2. Запустите приложение
 
     ```bash
     ./run.sh
     ```
 
-3. Open the browser and go to [http://localhost:3000](http://localhost:3000)
+3. Откройте браузер и перейдите по адресу  [http://localhost:3001](http://localhost:3001)
 
-4. Stop and remove the containers
+4. Остановите и удалите контейнеры
 
     ```bash
     ./run.sh stop
     ```
 
-### Build locally
+### Сборка локально
 
-1. Clone the repository
+1. Клонируйте репозиторий
 
     ```bash
-    git clone https://github.com/farneser/task-tracker --recurse-submodules && cd task-tracker
+    git clone https://github.com/fanat1kq/task-tracker.git --recurse-submodules && cd task-tracker
     ```
 
-2. Run build docker compose
+2. Запустите сборку docker compose
 
     ```bash
     docker-compose -f docker-compose-build.yml build
     ```
 
-3. Run the application
+3. Запустите приложение
 
     ```bash
     docker-compose -f docker-compose-build.yml up
     ```
 
-4. Open the browser and go to [http://localhost:3000](http://localhost:3000)
-5. Stop and remove the containers
+4. Откройте браузер и перейдите по адресу  [http://localhost:3001](http://localhost:3001)
+5. Остановите и удалите контейнеры
 
     ```bash
     docker-compose -f docker-compose-build.yml down -v
@@ -113,30 +98,4 @@ Run the application with the default configuration (docker compose is required).
 
 ## CI/DI
 
-As part of the project, an automated CI/CD process has been configured using GitHub Actions for each microservice. This
-process ensures the automatic creation of Docker images and their upload to a shared repository (Docker Hub) when
-changes are made to the master branch.
-
-### Web API
-
-[![Maven build](https://github.com/farneser/task-tracker-api/actions/workflows/maven.yml/badge.svg)](https://github.com/farneser/task-tracker-api/actions/workflows/maven.yml)
-
-[![Docker Image build](https://github.com/farneser/task-tracker-api/actions/workflows/docker.yml/badge.svg)](https://github.com/farneser/task-tracker-api/actions/workflows/docker.yml)
-
-### Scheduler
-
-[![Maven build](https://github.com/farneser/task-tracker-scheduler/actions/workflows/maven.yml/badge.svg)](https://github.com/farneser/task-tracker-scheduler/actions/workflows/maven.yml)
-
-[![Docker Image Build](https://github.com/farneser/task-tracker-scheduler/actions/workflows/docker.yml/badge.svg)](https://github.com/farneser/task-tracker-scheduler/actions/workflows/docker.yml)
-
-### Email Sender
-
-[![Maven build](https://github.com/farneser/task-tracker-email-sender/actions/workflows/maven.yml/badge.svg)](https://github.com/farneser/task-tracker-email-sender/actions/workflows/maven.yml)
-
-[![Docker Image build](https://github.com/farneser/task-tracker-email-sender/actions/workflows/docker.yml/badge.svg)](https://github.com/farneser/task-tracker-email-sender/actions/workflows/docker.yml)
-
-### Client
-
-[![Build CI](https://github.com/farneser/task-tracker-client/actions/workflows/yarn.yml/badge.svg)](https://github.com/farneser/task-tracker-client/actions/workflows/yarn.yml)
-
-[![Docker Image build](https://github.com/farneser/task-tracker-client/actions/workflows/docker.yml/badge.svg)](https://github.com/farneser/task-tracker-client/actions/workflows/docker.yml)
+В рамках проекта был настроен автоматизированный процесс CI/CD с использованием GitHub Actions для каждого микросервиса. Этот процесс обеспечивает автоматическое создание Docker-образов и их загрузку в общий репозиторий (Docker Hub) при внесении изменений в ветку master.
